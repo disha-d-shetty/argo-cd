@@ -40,13 +40,12 @@ jobs:
             echo "secret:"
             kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
             # kubectl port-forward svc/argocd-server -n argocd 8080:443
-            
+
       - name: Install ngrok
         run: |
-              wget https://bin.equinox.io/c/4b0e0f58706c/ngrok-stable-linux-amd64.zip
-              unzip ngrok-stable-linux-amd64.zip
-              sudo mv ngrok /usr/local/bin/
-      
+            curl -s https://ngrok.com/download | tar xz
+            sudo mv ngrok /usr/local/bin/
+
       - name: Start ngrok
         run: |
               nohup ngrok http 8080 > /dev/null 2>&1 &

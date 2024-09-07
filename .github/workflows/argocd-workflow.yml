@@ -9,7 +9,8 @@ on:
       - '**'
 
 jobs:
-  argocd-setup:
+  argocd-setup:     #job id(used for ref in case any job/step needs it)
+    name: Setting up argo-cd  #job name(optional)
     runs-on: ubuntu-latest
 
     #copy of your repository at the GitHub runner
@@ -17,12 +18,23 @@ jobs:
       - name: Check Out Repo
         uses: actions/checkout@v2
 
-      - uses: balchua/microk8s-actions@v0.3.2
+      - name: Install microk8s
+        uses: balchua/microk8s-actions@v0.3.2
         with:
             channel: '1.26/stable'
             addons: '["dns", "rbac", "hostpath-storage", "registry"]'
       - name: Test MicroK8s
-        id: myactions
+        id: myactions #step id
         run: |
+            cat ~/.kube/config
             kubectl get no
             kubectl get pods -A -o wide
+      - name: Install ArgoCD
+        run: |
+            kubectl create namespace argocd
+            kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+            kubectl get svc argocd-server -n argocd
+            echo "secret:"
+            kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+            kubectl port-forward svc/argocd-server -n argocd 8080:443
+            

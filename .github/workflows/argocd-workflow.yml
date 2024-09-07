@@ -1,0 +1,28 @@
+name: ARGO CD workflow
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  argocd-setup:
+    runs-on: ubuntu-latest
+
+    #copy of your repository at the GitHub runner
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - uses: balchua/microk8s-actions@v0.3.2
+        with:
+            channel: '1.26/stable'
+            addons: '["dns", "rbac", "hostpath-storage", "registry"]'
+      - name: Test MicroK8s
+        id: myactions
+        run: |
+            kubectl get no
+            kubectl get pods -A -o wide

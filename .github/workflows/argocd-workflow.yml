@@ -33,7 +33,7 @@ jobs:
         run: |
             kubectl create namespace argocd
             kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-            kubectl wait pod --all --for=condition=Ready --namespace=argocd  --timeout=60s
+            # kubectl wait pod --all --for=condition=Ready --namespace=argocd  --timeout=60s
             kubectl get pods -A -o wide --watch
             kubectl get svc argocd-server -n argocd
             echo "secret:"

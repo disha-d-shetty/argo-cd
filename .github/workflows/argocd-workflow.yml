@@ -43,7 +43,7 @@ jobs:
 
       - name: Install ngrok
         run: |
-            snap install ngrok
+            sudo snap install ngrok
 
       - name: Start ngrok
         run: |

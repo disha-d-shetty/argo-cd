@@ -53,7 +53,7 @@ jobs:
         run: |
             ngrok -h
             ngrok config add-authtoken 2lmIDJBVb6Mru22RsWXqdoTOGOb_5DQXMvgd8KjYd3bMzSpm8
-            nohup ngrok http 8080 > ngrok.log 2>&1 &
+            ngrok http 8080 
             sleep 10  # Give ngrok some time to start
             curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'
       

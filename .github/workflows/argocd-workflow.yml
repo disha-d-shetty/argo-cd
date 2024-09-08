@@ -48,6 +48,7 @@ jobs:
       - name: Start ngrok
         run: |
             ngrok -h
+            mkdir -p $HOME/.config/ngrok
             ngrok config add-authtoken 2lmIDJBVb6Mru22RsWXqdoTOGOb_5DQXMvgd8KjYd3bMzSpm8
             ngrok http 8080 
             sleep 10  # Give ngrok some time to start

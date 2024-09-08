@@ -43,14 +43,21 @@ jobs:
 
       - name: Install ngrok
         run: |
-            curl -s https://ngrok.com/download | tar xz
-            sudo mv ngrok /usr/local/bin/
+            curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
+            sudo gpg --dearmor -o /etc/apt/keyrings/ngrok.gpg && \
+            echo "deb [signed-by=/etc/apt/keyrings/ngrok.gpg] https://ngrok-agent.s3.amazonaws.com buster main" | \
+            sudo tee /etc/apt/sources.list.d/ngrok.list && \
+            sudo apt update && sudo apt install ngrok
 
       - name: Start ngrok
         run: |
-              nohup ngrok http 8080 > /dev/null 2>&1 &
+            ngrok -h
+            ngrok config add-authtoken 2lmIDJBVb6Mru22RsWXqdoTOGOb_5DQXMvgd8KjYd3bMzSpm8
+            nohup ngrok http 8080 > ngrok.log 2>&1 &
+            sleep 10  # Give ngrok some time to start
+            curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'
       
-      - name: Get ngrok URL
-        run: |
-              sleep 10  # Wait for ngrok to initialize
-              curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'            
+    #   - name: Get ngrok URL
+    #     run: |
+    #           sleep 10  # Wait for ngrok to initialize
+    #           curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'            

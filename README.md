@@ -10,3 +10,14 @@
 2. As i cant be able to access URLs of argo cd, so using ngrok(bot recommened as it ll breach security n stuff, beeter to setup ur own cluster n work on it)
     get auth code from dashboard(just by login)
     details - https://ngrok.com/docs/guides/getting-started/
+
+
+
+if you have kind/minikube on local. Then:
+1. choco install kind
+2. kind create cluster --name kind-2
+3. kind get clusters
+4. kubectl create namespace argocd
+5. kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+6. kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+7. kubectl port-forward svc/argocd-server -n argocd 8080:443

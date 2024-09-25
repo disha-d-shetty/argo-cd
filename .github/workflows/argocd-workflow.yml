@@ -23,7 +23,7 @@ jobs:
         with:
             channel: '1.26/stable'
             addons: '["dns", "rbac", "hostpath-storage", "registry"]'
-      - name: Test MicroK8s
+      - name: Test MicroK8s 
         id: myactions #step id
         run: |
             cat ~/.kube/config
@@ -31,8 +31,9 @@ jobs:
             kubectl get pods -A -o wide
       - name: Install ArgoCD
         run: |
-            kubectl create namespace argocd
-            kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+            kubectl create namespace argocd #installation steps ends
+            kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml    
+            
             kubectl wait pod --all --for=condition=Ready --namespace=argocd  --timeout=60s
             kubectl get pods -A -o wide 
             kubectl get svc argocd-server -n argocd
